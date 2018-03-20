@@ -1,0 +1,7 @@
+{
+  "name": "com.dannyvankooten.browserpass",
+  "description": "Retrieves GPG encrypted passwords",
+  "path": "C:\\quickpass\\quickpass.bat",
+  "type": "stdio",
+  "allowed_extensions": ["browserpass@dannyvankooten.com", "browserpass@maximbaz.com"]
+}
