@@ -11,7 +11,7 @@ from os.path import expanduser
 root = expanduser("~") + "/.password-store/"
 
 def read():
-    rawlen = sys.stdin.read(4)
+    rawlen = sys.stdin.buffer.read(4)
     if len(rawlen) == 0:
         sys.exit(0)
     msglen = struct.unpack('@I', rawlen)[0]
@@ -20,8 +20,8 @@ def read():
 
 def write(msg):
     encmsg = json.dumps(msg)
-    sys.stdout.write(struct.pack('@I', len(encmsg)))
-    sys.stdout.write(encmsg)
+    sys.stdout.buffer.write(struct.pack('@I', len(encmsg)))
+    sys.stdout.buffer.write(encmsg.encode())
     sys.stdout.flush()
 
 while True:
@@ -32,13 +32,13 @@ while True:
             domain = domain[4:]
         credentials = glob.glob(root + "**/*.gpg") + glob.glob(root + "*.gpg")
         credentials = map(lambda x: x[len(root):-4].replace("\\", "/"), credentials)
-        credentials = filter(lambda x: domain in x, credentials)
+        credentials = [x for x in credentials if domain in x]
         write(credentials)
     elif body['action'] == 'get':
         pipe = subprocess.Popen(["gpg", "--decrypt", root + body['entry'] + '.gpg'], stdout=subprocess.PIPE)
         stdout, stderr = pipe.communicate()
         if pipe.returncode == 0:
-            lines = stdout.split("\n")
+            lines = stdout.decode().split("\n")
             password = lines[0]
             properties = { }
             for line in lines[1:]:

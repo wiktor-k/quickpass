@@ -1,6 +1,6 @@
 # QuickPass
 
-QuickPass is a native component written in Python that can
+QuickPass is a native component written in Python 3 that can
 be used with [browserpass][bp] to provide list of passwords
 and credentials for a given page.
 
